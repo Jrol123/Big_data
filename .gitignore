@@ -415,3 +415,5 @@ cython_debug/
 # Android studio 3.1+ serialized cache file
 
 *.txt
+
+/lab6/augment
