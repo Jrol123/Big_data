@@ -52,6 +52,19 @@
         ],
         "description": "Базовая FNN"
     },
+	"train_test split": {
+        "scope": "python",
+        "prefix": "split",
+        "body": [
+            "X = df.drop(${1:target_col}, axis=1)",
+            "y = df[${1:target_col}]",
+            "",
+            "X_train, X_test, y_train, y_test = train_test_split(",
+            "\tX, y, test_size=${2:0.2}, random_state=${3:42}",
+            ")"
+        ],
+        "description": "Распределение данных на выборки"
+    },
 	// Place your Рабочая область Big_data snippets here. Each snippet is defined under a snippet name and has a scope, prefix, body and 
 	// description. Add comma separated ids of the languages where the snippet is applicable in the scope field. If scope 
 	// is left empty or omitted, the snippet gets applied to all languages. The prefix is what is 
