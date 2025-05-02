@@ -60,10 +60,35 @@
             "y = df[${1:target_col}]",
             "",
             "X_train, X_test, y_train, y_test = train_test_split(",
-            "\tX, y, test_size=${2:0.2}, random_state=${3:42}",
+            	"\tX, y, test_size=${2:0.2}, random_state=${3:42}",
             ")"
         ],
         "description": "Распределение данных на выборки"
+    },
+	"Correlation heatmap": {
+        "scope": "python",
+        "prefix": "corr_heatmap",
+        "body": [
+            "(",
+				"\tdf.corr()",
+				"\t.where(lambda x: (abs(x) > ${1:0.95}) & (abs(x) != 1.0))",
+				"\t.dropna(axis=1, how=\"all\")",
+				"\t.dropna(axis=0, how=\"all\")",
+            "\t.fillna(0)",
+            ")"
+        ],
+        "description": "Матрица кореляций, где кореляция между признаками больше ${1}"
+    },
+	"Draw heatmap": {
+        "scope": "python",
+        "prefix": "draw_heatmap",
+        "body": [
+            "def draw_heatmap(data, mask=None):",
+            "\tplt.figure(figsize=(12, 12))",
+            "\tsns.heatmap(data.corr(), mask=mask)",
+            "\tplt.show()"
+        ],
+        "description": "Отризовка heatmap-ы с маской"
     },
 	// Place your Рабочая область Big_data snippets here. Each snippet is defined under a snippet name and has a scope, prefix, body and 
 	// description. Add comma separated ids of the languages where the snippet is applicable in the scope field. If scope 
