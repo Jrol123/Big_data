@@ -424,3 +424,5 @@ S6/D1/L7/Lab/tiny-imagenet-200.zip
 # Images
 *.png
 /S7/Introduction/Lab4/models
+/S7/Introduction/Lab4/data
+/S7/Introduction/Lab4/logs

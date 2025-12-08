@@ -20,6 +20,7 @@ services:
     ports:
       - "5000:5000"
     environment:
+      - MLFLOW_TRACKING_URI=http://mlflow-tracking:5000
       - AWS_ACCESS_KEY_ID=minio
       - AWS_SECRET_ACCESS_KEY=minio123
       - MLFLOW_S3_ENDPOINT_URL=http://minio:9000
