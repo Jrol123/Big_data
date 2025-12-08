@@ -1,0 +1,16 @@
+FROM ghcr.io/mlflow/mlflow:latest
+
+# Установка psycopg2 для работы с PostgreSQL
+RUN apt-get update && \
+    apt-get install -y \
+    postgresql-client \
+    git \
+    && rm -rf /var/lib/apt/lists/*
+RUN pip install --upgrade pip && pip install --no-cache-dir psycopg
+
+# Копирование скрипта запуска
+COPY scripts/start_mlflow.sh /start_mlflow.sh
+RUN chmod +x /start_mlflow.sh
+
+# Запуск скрипта
+ENTRYPOINT ["/start_mlflow.sh"]

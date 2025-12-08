@@ -1,0 +1,135 @@
+{
+    "shape": [
+        20640,
+        10
+    ],
+    "columns": [
+        "MedInc",
+        "HouseAge",
+        "AveRooms",
+        "AveBedrms",
+        "Population",
+        "AveOccup",
+        "Latitude",
+        "Longitude",
+        "MedHouseVal",
+        "collection_date"
+    ],
+    "dtypes": {
+        "MedInc": "float64",
+        "HouseAge": "float64",
+        "AveRooms": "float64",
+        "AveBedrms": "float64",
+        "Population": "float64",
+        "AveOccup": "float64",
+        "Latitude": "float64",
+        "Longitude": "float64",
+        "MedHouseVal": "float64",
+        "collection_date": "object"
+    },
+    "missing_values": {},
+    "missing_percentage": {},
+    "outliers": {
+        "MedInc": {
+            "count": 681,
+            "percentage": 3.299418604651163,
+            "lower_bound": -0.7063750000000004,
+            "upper_bound": 8.013024999999999
+        },
+        "AveRooms": {
+            "count": 511,
+            "percentage": 2.47577519379845,
+            "lower_bound": 2.023219161170969,
+            "upper_bound": 8.469878027106942
+        },
+        "AveBedrms": {
+            "count": 1424,
+            "percentage": 6.899224806201551,
+            "lower_bound": 0.8659085155701288,
+            "upper_bound": 1.2396965968190603
+        },
+        "Population": {
+            "count": 1196,
+            "percentage": 5.794573643410852,
+            "lower_bound": -620.0,
+            "upper_bound": 3132.0
+        },
+        "AveOccup": {
+            "count": 711,
+            "percentage": 3.444767441860465,
+            "lower_bound": 1.1509614824735064,
+            "upper_bound": 4.5610405893536905
+        },
+        "MedHouseVal": {
+            "count": 1071,
+            "percentage": 5.188953488372093,
+            "lower_bound": -0.9808749999999995,
+            "upper_bound": 4.824124999999999
+        }
+    },
+    "distribution": {
+        "MedInc": {
+            "mean": 3.8706710029069766,
+            "std": 1.8998217179452688,
+            "min": 0.4999,
+            "max": 15.0001,
+            "skew": 1.6466567021344465
+        },
+        "HouseAge": {
+            "mean": 28.639486434108527,
+            "std": 12.58555761211165,
+            "min": 1.0,
+            "max": 52.0,
+            "skew": 0.060330637599136865
+        },
+        "AveRooms": {
+            "mean": 5.428999742190376,
+            "std": 2.4741731394243187,
+            "min": 0.8461538461538461,
+            "max": 141.9090909090909,
+            "skew": 20.69786895671065
+        },
+        "AveBedrms": {
+            "mean": 1.096675149606208,
+            "std": 0.4739108567954661,
+            "min": 0.3333333333333333,
+            "max": 34.06666666666667,
+            "skew": 31.316956246782663
+        },
+        "Population": {
+            "mean": 1425.4767441860465,
+            "std": 1132.462121765341,
+            "min": 3.0,
+            "max": 35682.0,
+            "skew": 4.93585822672712
+        },
+        "AveOccup": {
+            "mean": 3.0706551594363742,
+            "std": 10.386049562213618,
+            "min": 0.6923076923076923,
+            "max": 1243.3333333333333,
+            "skew": 97.63956096369479
+        },
+        "Latitude": {
+            "mean": 35.63186143410853,
+            "std": 2.1359523974571153,
+            "min": 32.54,
+            "max": 41.95,
+            "skew": 0.46595300370997006
+        },
+        "Longitude": {
+            "mean": -119.56970445736432,
+            "std": 2.0035317235025882,
+            "min": -124.35,
+            "max": -114.31,
+            "skew": -0.2978012079524362
+        },
+        "MedHouseVal": {
+            "mean": 2.068558169089147,
+            "std": 1.1539561587441387,
+            "min": 0.14999,
+            "max": 5.00001,
+            "skew": 0.9777632739098345
+        }
+    }
+}

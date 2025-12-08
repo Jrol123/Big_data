@@ -1,0 +1,124 @@
+services:
+  # MLflow Tracking Server
+  mlflow-tracking:
+    build:
+      context: .
+      dockerfile: Dockerfile.mlflow
+    # command: >
+    #   /bin/sh -c "
+    #   echo 'Waiting for PostgreSQL...' &&
+    #   sleep 5 &&
+    #   echo 'Starting MLflow server...' &&
+    #   mlflow server
+    #     --host 0.0.0.0
+    #     --port 5000
+    #     --disable-security-middleware
+    #     --backend-store-uri postgresql://mlflow:mlflow@postgres:5432/mlflowdb
+    #     --default-artifact-root s3://mlflow-artifacts/
+    #     --gunicorn-opts '--log-level debug'
+    #   "
+    ports:
+      - "5000:5000"
+    environment:
+      - AWS_ACCESS_KEY_ID=minio
+      - AWS_SECRET_ACCESS_KEY=minio123
+      - MLFLOW_S3_ENDPOINT_URL=http://minio:9000
+    depends_on:
+      - postgres
+      - minio
+    networks:
+      - mlflow-network
+
+  # PostgreSQL для хранения метрик и параметров
+  postgres:
+    image: postgres:13
+    environment:
+      - POSTGRES_USER=mlflow
+      - POSTGRES_PASSWORD=mlflow
+      - POSTGRES_DB=mlflowdb
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - mlflow-network
+
+  # MinIO для хранения артефактов (моделей, графиков)
+  minio:
+    image: minio/minio:latest
+    command: server /data --console-address ":9001"
+    environment:
+      - MINIO_ROOT_USER=minio
+      - MINIO_ROOT_PASSWORD=minio123
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:9000/minio/health/live" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    volumes:
+      - minio_data:/data
+    networks:
+      - mlflow-network
+
+  # MinIO клиент для создания bucket
+  minio-create-bucket:
+    image: minio/mc:latest
+    depends_on:
+      - minio
+    entrypoint: >
+      /bin/sh -c " sleep 10; mc alias set myminio http://minio:9000 minio minio123; mc mb myminio/mlflow-artifacts; mc anonymous set download myminio/mlflow-artifacts; exit 0; "
+    networks:
+      - mlflow-network
+
+  # Jupyter для визуализации
+  jupyter:
+    build:
+      context: .
+      dockerfile: Dockerfile.jupyter
+    ports:
+      - "8888:8888"
+    volumes:
+      - ./notebooks:/home/jovyan/work/notebooks
+      - ./data:/home/jovyan/work/data
+      - ./logs:/home/jovyan/work/logs
+      - ./models:/home/jovyan/work/models
+    environment:
+      - MLFLOW_TRACKING_URI=http://mlflow-tracking:5000
+      - JUPYTER_ENABLE_LAB=yes
+    command: start-notebook.sh --NotebookApp.token='' --NotebookApp.password=''
+    networks:
+      - mlflow-network
+
+  # Сервис для обучения
+  training-service:
+    build:
+      context: .
+      dockerfile: Dockerfile.train
+    volumes:
+      - ./data:/app/data
+      - ./models:/app/models
+      - ./logs:/app/logs
+      - ./scripts:/app/scripts
+    environment:
+      - MLFLOW_TRACKING_URI=http://mlflow-tracking:5000
+      - AWS_ACCESS_KEY_ID=minio
+      - AWS_SECRET_ACCESS_KEY=minio123
+      - MLFLOW_S3_ENDPOINT_URL=http://minio:9000
+    command: >
+      /bin/sh -c " echo 'Waiting for services to start...' && sleep 30 && echo 'Starting training pipeline...' && python scripts/data_collection.py && python scripts/data_validation.py && python scripts/train.py "
+    depends_on:
+      - mlflow-tracking
+      - minio
+      - postgres
+    networks:
+      - mlflow-network
+
+volumes:
+  postgres_data:
+  minio_data:
+
+
+networks:
+  mlflow-network:
+    driver: bridge
