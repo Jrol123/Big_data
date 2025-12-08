@@ -1,3 +1,7 @@
+"""
+Предсказание на новых данных
+"""
+
 import mlflow
 import pandas as pd
 import numpy as np

@@ -106,7 +106,7 @@ services:
       - AWS_SECRET_ACCESS_KEY=minio123
       - MLFLOW_S3_ENDPOINT_URL=http://minio:9000
     command: >
-      /bin/sh -c " echo 'Waiting for services to start...' && sleep 30 && echo 'Starting training pipeline...' && python scripts/data_collection.py && python scripts/data_validation.py && python scripts/train.py "
+      /bin/sh -c " echo 'Waiting for services to start...' && sleep 30 && echo 'Starting training pipeline...' && python scripts/data_collection.py && python scripts/data_validation.py && python scripts/train.py && python scripts/inference.py"
     depends_on:
       - mlflow-tracking
       - minio

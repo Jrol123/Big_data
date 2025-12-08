@@ -16,7 +16,7 @@ scp notebooks/* mlflow-project/notebooks/
 
 @REM 4. Запуск проекта
 cd mlflow-project
-docker compose down -v
+docker compose down
 docker compose up -d
 
 @REM 5. Проверка сервисов

@@ -1,3 +1,7 @@
+"""
+Обучение моделей
+"""
+
 import mlflow
 import mlflow.sklearn
 import pandas as pd
@@ -62,87 +66,91 @@ class ModelTrainer:
     def train_model(self, model_name, model, X_train, X_test, y_train, y_test):
         """Обучение одной модели с логированием в MLflow"""
         logger.info(f"Обучение модели: {model_name}")
-        
+
         # Обучение модели
         model.fit(X_train, y_train)
-        
+
         # Предсказания на тестовых данных
         y_pred = model.predict(X_test)
-        
+
         # Расчет метрик
         mse = mean_squared_error(y_test, y_pred)
         mae = mean_absolute_error(y_test, y_pred)
         r2 = r2_score(y_test, y_pred)
-        
+
         # Кросс-валидация
-        cv_scores = cross_val_score(model, X_train, y_train, cv=5, scoring='r2')
-        
+        cv_scores = cross_val_score(model, X_train, y_train, cv=5, scoring="r2")
+
         # Создание сигнатуры модели
         # Берем небольшой пример входных данных (первые 5 строк)
         input_example = X_train[:5]
-        
+
         # Получаем предсказания для примера
         output_example = model.predict(input_example)
-        
+
         # Выводим сигнатуру на основе примера
         signature = infer_signature(input_example, output_example)
-        
+
         logger.info(f"Создана сигнатура для модели {model_name}")
         logger.info(f"Входные данные: {signature.inputs}")
         logger.info(f"Выходные данные: {signature.outputs}")
-        
-        with mlflow.start_run(run_name=f"{model_name}_{datetime.now().strftime('%Y%m%d_%H%M%S')}"):
+
+        with mlflow.start_run(
+            run_name=f"{model_name}_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
+        ):
             # Логирование параметров
-            if hasattr(model, 'get_params'):
+            if hasattr(model, "get_params"):
                 mlflow.log_params(model.get_params())
-            
+
             # Логирование метрик
             mlflow.log_metric("mse", mse)
             mlflow.log_metric("mae", mae)
             mlflow.log_metric("r2_score", r2)
             mlflow.log_metric("cv_r2_mean", cv_scores.mean())
             mlflow.log_metric("cv_r2_std", cv_scores.std())
-            
+
             # Логирование модели С сигнатурой и примером
             mlflow.sklearn.log_model(
                 sk_model=model,
                 artifact_path=f"model_{model_name}",
                 signature=signature,
-                input_example=input_example
+                input_example=input_example,
             )
-            
+
             # Также сохраняем модель локально
-            os.makedirs('models', exist_ok=True)
-            model_path = f"models/{model_name}_{datetime.now().strftime('%Y%m%d_%H%M%S')}.joblib"
+            os.makedirs("models", exist_ok=True)
+            model_path = (
+                f"models/{model_name}_{datetime.now().strftime('%Y%m%d_%H%M%S')}.joblib"
+            )
             joblib.dump(model, model_path)
-            
+
             # Сохраняем информацию о модели
             model_info = {
-                'model_name': model_name,
-                'model_path': model_path,
-                'signature': {
-                    'inputs': str(signature.inputs),
-                    'outputs': str(signature.outputs)
+                "model_name": model_name,
+                "model_path": model_path,
+                "signature": {
+                    "inputs": str(signature.inputs),
+                    "outputs": str(signature.outputs),
                 },
-                'input_example_shape': input_example.shape,
-                'metrics': {
-                    'mse': float(mse),
-                    'mae': float(mae),
-                    'r2': float(r2),
-                    'cv_r2_mean': float(cv_scores.mean()),
-                    'cv_r2_std': float(cv_scores.std())
+                "input_example_shape": input_example.shape,
+                "metrics": {
+                    "mse": float(mse),
+                    "mae": float(mae),
+                    "r2": float(r2),
+                    "cv_r2_mean": float(cv_scores.mean()),
+                    "cv_r2_std": float(cv_scores.std()),
                 },
-                'timestamp': datetime.now().isoformat()
+                "timestamp": datetime.now().isoformat(),
             }
-            
+
             # Сохраняем информацию о модели в JSON
             info_path = f"models/{model_name}_info.json"
-            with open(info_path, 'w') as f:
+            with open(info_path, "w") as f:
                 json.dump(model_info, f, indent=4)
-            
+
             logger.info(f"Модель {model_name} обучена. R2: {r2:.4f}")
             logger.info(f"Сигнатура сохранена: {signature}")
-            
+
             return model_info
 
     def create_plots(self, y_test, y_pred, model_name):
