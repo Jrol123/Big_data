@@ -1,7 +1,4 @@
-@REM 1. Клонирование MLflow (опционально, если нужны исходники)
-@REM git clone https://github.com/mlflow/mlflow.git
-
-@REM 2. Создание структуры проекта
+@REM Создание структуры проекта
 mkdir mlflow-project
 cd mlflow-project
 mkdir data
@@ -10,24 +7,24 @@ mkdir scripts
 mkdir notebooks
 mkdir logs
 cd ..
-@REM # 3. Копирование всех файлов в соответствующие директории
+@REM Копирование всех файлов в соответствующие директории
 scp scripts/* mlflow-project/scripts/
 scp notebooks/*.ipynb mlflow-project/notebooks/
 
-@REM 4. Запуск проекта
+@REM Запуск проекта
 cd mlflow-project
 docker compose down
 docker compose up -d
 
-@REM 5. Проверка сервисов
+@REM Проверка сервисов
 docker compose ps
 
-@REM 6. Доступ к интерфейсам:
+@REM Доступ к интерфейсам:
 echo MLflow UI: http://localhost:5000
-echo MinIO UI: http://localhost:9001 (логин: minio, пароль: minio123)
+echo MinIO UI: http://localhost:9001
 echo Jupyter: http://localhost:8888
 
-@REM 7. Просмотр логов
+@REM Просмотр логов
 docker compose logs -f training-service
 
 @REM @REM 8. Запуск обучения вручную
