@@ -21,8 +21,8 @@ services:
       - "5000:5000"
     environment:
       - MLFLOW_TRACKING_URI=http://mlflow-tracking:5000
-      - AWS_ACCESS_KEY_ID=minio
-      - AWS_SECRET_ACCESS_KEY=minio123
+      - AWS_ACCESS_KEY_ID=${MINIO_LOGIN}
+      - AWS_SECRET_ACCESS_KEY=${MINIO_PASSWORD}
       - MLFLOW_S3_ENDPOINT_URL=http://minio:9000
     depends_on:
       - postgres
@@ -47,8 +47,8 @@ services:
     image: minio/minio:latest
     command: server /data --console-address ":9001"
     environment:
-      - MINIO_ROOT_USER=minio
-      - MINIO_ROOT_PASSWORD=minio123
+      - MINIO_ROOT_USER=${MINIO_LOGIN}
+      - MINIO_ROOT_PASSWORD=${MINIO_PASSWORD}
     ports:
       - "9000:9000"
       - "9001:9001"
@@ -80,10 +80,10 @@ services:
     ports:
       - "8888:8888"
     volumes:
-      - ./notebooks:/home/jovyan/work/notebooks
-      - ./data:/home/jovyan/work/data
-      - ./logs:/home/jovyan/work/logs
-      - ./models:/home/jovyan/work/models
+      - ${PROJECT_ROOT}/notebooks:/home/jovyan/work/notebooks
+      - ${PROJECT_ROOT}/data:/home/jovyan/work/data
+      - ${PROJECT_ROOT}/logs:/home/jovyan/work/logs
+      - ${PROJECT_ROOT}/models:/home/jovyan/work/models
     environment:
       - MLFLOW_TRACKING_URI=http://mlflow-tracking:5000
       - JUPYTER_ENABLE_LAB=yes
@@ -97,14 +97,14 @@ services:
       context: .
       dockerfile: Dockerfile.train
     volumes:
-      - ./data:/app/data
-      - ./models:/app/models
-      - ./logs:/app/logs
-      - ./scripts:/app/scripts
+      - ${PROJECT_ROOT}/data:/app/data
+      - ${PROJECT_ROOT}/models:/app/models
+      - ${PROJECT_ROOT}/logs:/app/logs
+      - ${PROJECT_ROOT}/scripts:/app/scripts
     environment:
       - MLFLOW_TRACKING_URI=http://mlflow-tracking:5000
-      - AWS_ACCESS_KEY_ID=minio
-      - AWS_SECRET_ACCESS_KEY=minio123
+      - AWS_ACCESS_KEY_ID=${MINIO_LOGIN}
+      - AWS_SECRET_ACCESS_KEY=${MINIO_PASSWORD}
       - MLFLOW_S3_ENDPOINT_URL=http://minio:9000
     command: >
       /bin/sh -c " echo 'Waiting for services to start...' && sleep 30 && echo 'Starting training pipeline...' && python scripts/data_collection.py && python scripts/data_validation.py && python scripts/train.py && python scripts/inference.py"
