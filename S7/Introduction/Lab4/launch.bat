@@ -12,7 +12,7 @@ mkdir logs
 cd ..
 @REM # 3. Копирование всех файлов в соответствующие директории
 scp scripts/* mlflow-project/scripts/
-scp notebooks/* mlflow-project/notebooks/
+scp notebooks/*.ipynb mlflow-project/notebooks/
 
 @REM 4. Запуск проекта
 cd mlflow-project
