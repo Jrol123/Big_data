@@ -138,14 +138,14 @@ def main():
     
     # Пример данных для предсказания
     sample_data = {
-        'MedInc': [3.0],
-        'HouseAge': [25.0],
-        'AveRooms': [5.0],
-        'AveBedrms': [1.0],
-        'Population': [1000.0],
-        'AveOccup': [3.0],
-        'Latitude': [34.0],
-        'Longitude': [-118.0]
+        'MedInc': 3.0,
+        'HouseAge': 25.0,
+        'AveRooms': 5.0,
+        'AveBedrms': 1.0,
+        'Population': 1000.0,
+        'AveOccup': 3.0,
+        'Latitude': 34.0,
+        'Longitude': -118.0
     }
     
     # Единичное предсказание

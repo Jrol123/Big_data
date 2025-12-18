@@ -6,7 +6,7 @@ RUN apt-get update && \
     postgresql-client \
     git \
     && rm -rf /var/lib/apt/lists/*
-RUN pip install --upgrade pip && pip install --no-cache-dir psycopg boto3
+RUN pip install --upgrade pip && pip install --no-cache-dir psycopg2-binary boto3
 
 # Копирование скрипта запуска
 COPY scripts/start_mlflow.sh /start_mlflow.sh
