@@ -19,7 +19,7 @@ logger = logging.getLogger(__name__)
 
 
 class InferencePipeline:
-    def __init__(self, log_to_mlflow=False):
+    def __init__(self, log_to_mlflow=True):
         self.model = None
         self.scaler = None
         self._log_to_mlflow = log_to_mlflow
@@ -175,10 +175,10 @@ class InferencePipeline:
 
 
 def main():
-    # Отключение создания новых ранов для инференса
     mlflow.autolog(disable=True)
+    mlflow.set_experiment("California Housing Prediction")
     # Инициализация пайплайна
-    pipeline = InferencePipeline(log_to_mlflow=True)
+    pipeline = InferencePipeline()
 
     # Загрузка модели
     model_info = pipeline.load_latest_model()

@@ -199,8 +199,11 @@ class ModelTrainer:
 
         mlflow.log_artifact(errors_path, "plots")
 
+    # TODO: Переделать под систему с run-ами, т. к. сейчас MLFLOW создаёт run-ы из-за comparison-а
     def compare_models(self, results):
         """Сравнение моделей и выбор лучшей"""
+        mlflow.set_tag("stage", "comparison")
+        mlflow.set_tag("report_type", "model_comparison")
         logger.info("Сравнение моделей...")
 
         best_model = None
@@ -277,6 +280,7 @@ def main():
         results.append(result)
 
     # Сравнение моделей и выбор лучшей
+    # mlflow.autolog(disable=True)
     best_model = trainer.compare_models(results)
 
     # Сохранение информации о лучшей модели
