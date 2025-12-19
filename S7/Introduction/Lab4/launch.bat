@@ -8,8 +8,8 @@ mkdir notebooks
 mkdir logs
 cd ..
 @REM Копирование всех файлов в соответствующие директории
-scp scripts/* mlflow-project/scripts/
-scp notebooks/*.ipynb mlflow-project/notebooks/
+scp -r scripts/* mlflow-project/scripts/
+scp -r notebooks/*.ipynb mlflow-project/notebooks/
 
 @REM Запуск проекта
 cd mlflow-project

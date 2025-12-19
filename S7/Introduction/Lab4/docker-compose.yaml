@@ -87,7 +87,9 @@ services:
     environment:
       - MLFLOW_TRACKING_URI=http://mlflow-tracking:5000
       - JUPYTER_ENABLE_LAB=yes
-    command: start-notebook.sh --NotebookApp.token='' --NotebookApp.password=''
+    # command: start-notebook.sh --NotebookApp.token='' --NotebookApp.password=''
+    depends_on:
+      - mlflow-tracking
     networks:
       - mlflow-network
 
@@ -106,8 +108,8 @@ services:
       - AWS_ACCESS_KEY_ID=${MINIO_LOGIN}
       - AWS_SECRET_ACCESS_KEY=${MINIO_PASSWORD}
       - MLFLOW_S3_ENDPOINT_URL=http://minio:9000
-    command: >
-      /bin/sh -c " echo 'Waiting for services to start...' && sleep 30 && echo 'Starting training pipeline...' && python scripts/data_collection.py && python scripts/data_validation.py && python scripts/train.py && python scripts/inference.py"
+    # command: >
+    #   /bin/sh -c " echo 'Waiting for services to start...' && sleep 30 && echo 'Starting training pipeline...' && python scripts/data_collection.py && python scripts/data_validation.py && python scripts/train.py && python scripts/inference.py"
     depends_on:
       - mlflow-tracking
       - minio
