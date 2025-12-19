@@ -6,8 +6,11 @@ RUN apt-get update && \
     postgresql-client \
     git \
     && rm -rf /var/lib/apt/lists/*
+
+COPY py_req/mlflow_requirements.txt requirements.txt
+
 RUN pip install --upgrade pip && pip install --no-cache-dir uv
-RUN uv pip install --system --no-cache-dir -r mlflow_requirements.txt
+RUN uv pip install --system --no-cache-dir -r requirements.txt
 
 # Копирование скрипта запуска
 COPY scripts/sh/utility/start_mlflow.sh /start_mlflow.sh
